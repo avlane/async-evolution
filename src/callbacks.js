@@ -2,22 +2,24 @@
 
 const fs = require('fs');
 const path = require('path');
-const { analyze, isTextFile } = require('./common');
+const { isTextFile, fileResult, errorEntry, finish } = require('./common');
 
-// callback(err, results) where results is a list of { file, lines, words, chars }.
+// callback(err, { results, errors })
 function processDir(dir, callback) {
   fs.readdir(dir, (err, names) => {
     if (err) return callback(err);
-    const files = names.filter(isTextFile).sort();
+    const files = names.filter(isTextFile);
     const results = [];
-    (function next(i) {
-      if (i === files.length) return callback(null, results);
-      fs.readFile(path.join(dir, files[i]), 'utf8', (err, text) => {
-        if (err) return callback(err);
-        results.push(Object.assign({ file: files[i] }, analyze(text)));
-        next(i + 1);
+    const errors = [];
+    let pending = files.length;
+    files.forEach(name => {
+      fs.readFile(path.join(dir, name), 'utf8', (err, text) => {
+        if (err) errors.push(errorEntry(name, err));
+        else results.push(fileResult(name, text));
+        pending--;
+        if (pending === 0) callback(null, finish(results, errors));
       });
-    })(0);
+    });
   });
 }
 
