@@ -33,4 +33,24 @@ function finish(results, errors) {
   return { results: results.slice().sort(byFile), errors: errors.slice().sort(byFile) };
 }
 
-module.exports = { analyze, isTextFile, fileResult, errorEntry, finish };
+function totals(results) {
+  return results.reduce((t, r) => ({
+    files: t.files + 1,
+    lines: t.lines + r.lines,
+    words: t.words + r.words,
+    chars: t.chars + r.chars
+  }), { files: 0, lines: 0, words: 0, chars: 0 });
+}
+
+function row(label, r) {
+  return `${label.padEnd(20)} ${String(r.lines).padStart(6)} lines ${String(r.words).padStart(7)} words ${String(r.chars).padStart(8)} chars`;
+}
+
+function formatReport(outcome) {
+  const out = outcome.results.map(r => row(r.file, r));
+  out.push(row(`TOTAL (${outcome.results.length} files)`, totals(outcome.results)));
+  for (const e of outcome.errors) out.push(`error: ${e.file}: ${e.message}`);
+  return out.join('\n');
+}
+
+module.exports = { analyze, isTextFile, fileResult, errorEntry, finish, totals, formatReport };
