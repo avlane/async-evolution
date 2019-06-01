@@ -1,6 +1,7 @@
 'use strict';
 
 const callbacks = require('./callbacks');
+const promises = require('./promises');
 
 function fromCallback(fn) {
   return dir => new Promise((resolve, reject) => {
@@ -10,7 +11,8 @@ function fromCallback(fn) {
 
 // Every implementation is exposed as run(dir, opts) -> Promise<{ results, errors }>.
 const implementations = {
-  callbacks: fromCallback(callbacks.processDir)
+  callbacks: fromCallback(callbacks.processDir),
+  promises: promises.processDir
 };
 
 function run(name, dir, opts) {
