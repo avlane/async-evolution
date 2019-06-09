@@ -16,7 +16,14 @@ test('promises: analyzes the text files', () => {
   });
 });
 
-test('promises: one unreadable file rejects the run', () => {
-  const dir = makeDir({ 'good.txt': 'a b\n', 'broken.txt': null });
-  return assert.rejects(processDir(dir), { code: 'EISDIR' });
+test('promises: unreadable files end up in errors', () => {
+  const dir = makeDir({ 'good.txt': 'a b\n', 'broken.txt': null, 'also-broken.txt': null });
+  return processDir(dir).then(({ results, errors }) => {
+    assert.deepStrictEqual(results.map(r => r.file), ['good.txt']);
+    assert.deepStrictEqual(errors.map(e => e.file), ['also-broken.txt', 'broken.txt']);
+  });
+});
+
+test('promises: a missing directory rejects', () => {
+  return assert.rejects(processDir('/definitely/not/here'), { code: 'ENOENT' });
 });
