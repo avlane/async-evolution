@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
-const { isTextFile, fileResult, errorEntry, finish } = require('./common');
+const { isTextFile, fileResult, errorEntry, collect } = require('./common');
 
 const readdir = util.promisify(fs.readdir);
 const readFile = util.promisify(fs.readFile);
@@ -16,10 +16,7 @@ function processDir(dir) {
         err => ({ error: errorEntry(name, err) })
       )
     )))
-    .then(outcomes => finish(
-      outcomes.filter(o => o.result).map(o => o.result),
-      outcomes.filter(o => o.error).map(o => o.error)
-    ));
+    .then(collect);
 }
 
 module.exports = { processDir };

@@ -10,7 +10,7 @@ function usage() {
 }
 
 const args = process.argv.slice(2);
-let impl = 'callbacks';
+let impl = 'async';
 const rest = [];
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--impl') impl = args[++i];

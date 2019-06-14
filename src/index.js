@@ -2,6 +2,7 @@
 
 const callbacks = require('./callbacks');
 const promises = require('./promises');
+const asyncAwait = require('./async-await');
 
 function fromCallback(fn) {
   return dir => new Promise((resolve, reject) => {
@@ -12,7 +13,8 @@ function fromCallback(fn) {
 // Every implementation is exposed as run(dir, opts) -> Promise<{ results, errors }>.
 const implementations = {
   callbacks: fromCallback(callbacks.processDir),
-  promises: promises.processDir
+  promises: promises.processDir,
+  async: asyncAwait.processDir
 };
 
 function run(name, dir, opts) {

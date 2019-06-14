@@ -33,6 +33,14 @@ function finish(results, errors) {
   return { results: results.slice().sort(byFile), errors: errors.slice().sort(byFile) };
 }
 
+// Turn [{ result } | { error }] into the shared { results, errors } shape.
+function collect(outcomes) {
+  return finish(
+    outcomes.filter(o => o.result).map(o => o.result),
+    outcomes.filter(o => o.error).map(o => o.error)
+  );
+}
+
 function totals(results) {
   return results.reduce((t, r) => ({
     files: t.files + 1,
@@ -53,4 +61,4 @@ function formatReport(outcome) {
   return out.join('\n');
 }
 
-module.exports = { analyze, isTextFile, fileResult, errorEntry, finish, totals, formatReport };
+module.exports = { analyze, isTextFile, fileResult, errorEntry, finish, collect, totals, formatReport };
