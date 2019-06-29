@@ -12,6 +12,7 @@ function processDir(dir, callback) {
     const results = [];
     const errors = [];
     let pending = files.length;
+    if (pending === 0) return callback(null, finish(results, errors));
     files.forEach(name => {
       fs.readFile(path.join(dir, name), 'utf8', (err, text) => {
         if (err) errors.push(errorEntry(name, err));

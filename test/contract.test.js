@@ -42,3 +42,10 @@ for (const name of names) {
     assert.deepStrictEqual(results.map(r => r.file), ['UP.TXT']);
   });
 }
+
+for (const name of names) {
+  test(`${name}: a directory without text files gives empty lists`, async () => {
+    const outcome = await run(name, makeDir({ 'readme.md': 'hi' }));
+    assert.deepStrictEqual(outcome, { results: [], errors: [] });
+  });
+}
