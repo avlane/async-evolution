@@ -49,3 +49,13 @@ for (const name of names) {
     assert.deepStrictEqual(outcome, { results: [], errors: [] });
   });
 }
+
+test('async: a read limit does not change the result', async () => {
+  const files = {};
+  for (let i = 0; i < 15; i++) files[`f${String(i).padStart(2, '0')}.txt`] = 'word '.repeat(i) + '\n';
+  const dir = makeDir(files);
+  const unlimited = await run('async', dir);
+  assert.deepStrictEqual(await run('async', dir, { limit: 2 }), unlimited);
+  assert.deepStrictEqual(await run('async', dir, { limit: 1 }), unlimited);
+  assert.strictEqual(unlimited.results.length, 15);
+});
