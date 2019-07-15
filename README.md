@@ -5,6 +5,6 @@ and report its lines, words and characters. First with callbacks, then with
 promises, then with `async`/`await`. The point is to see how the same logic
 changes shape.
 
-Needs Node 10 or newer, no dependencies.
+Needs Node 12 or newer, no dependencies.
 
     node bin/run.js samples

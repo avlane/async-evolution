@@ -2,11 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const util = require('util');
 const { isTextFile, fileResult, errorEntry, collect } = require('./common');
 
-const readdir = util.promisify(fs.readdir);
-const readFile = util.promisify(fs.readFile);
+const { readdir, readFile } = fs.promises;
 
 function processDir(dir) {
   return readdir(dir)

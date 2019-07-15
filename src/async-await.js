@@ -2,12 +2,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const util = require('util');
 const { isTextFile, fileResult, errorEntry, collect } = require('./common');
 const { mapLimit } = require('./pool');
 
-const readdir = util.promisify(fs.readdir);
-const readFile = util.promisify(fs.readFile);
+const { readdir, readFile } = fs.promises;
 
 // opts.limit: maximum number of files read at the same time (default: all).
 async function processDir(dir, opts = {}) {
