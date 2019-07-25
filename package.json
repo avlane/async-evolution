@@ -4,7 +4,8 @@
   "private": true,
   "description": "The same file-processing job with callbacks, promises and async/await",
   "scripts": {
-    "test": "node test/run.js"
+    "test": "node test/run.js",
+    "bench": "node bench/compare.js"
   },
   "license": "MIT",
   "engines": {
