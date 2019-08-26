@@ -41,6 +41,17 @@ function collect(outcomes) {
   );
 }
 
+// For Promise.allSettled output: names[i] is the file behind settled[i].
+function collectSettled(names, settled) {
+  const results = [];
+  const errors = [];
+  settled.forEach((s, i) => {
+    if (s.status === 'fulfilled') results.push(s.value);
+    else errors.push(errorEntry(names[i], s.reason));
+  });
+  return finish(results, errors);
+}
+
 function totals(results) {
   return results.reduce((t, r) => ({
     files: t.files + 1,
@@ -61,4 +72,4 @@ function formatReport(outcome) {
   return out.join('\n');
 }
 
-module.exports = { analyze, isTextFile, fileResult, errorEntry, finish, collect, totals, formatReport };
+module.exports = { analyze, isTextFile, fileResult, errorEntry, finish, collect, collectSettled, totals, formatReport };
