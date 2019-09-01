@@ -33,13 +33,6 @@ function finish(results, errors) {
   return { results: results.slice().sort(byFile), errors: errors.slice().sort(byFile) };
 }
 
-// Turn [{ result } | { error }] into the shared { results, errors } shape.
-function collect(outcomes) {
-  return finish(
-    outcomes.filter(o => o.result).map(o => o.result),
-    outcomes.filter(o => o.error).map(o => o.error)
-  );
-}
 
 // For Promise.allSettled output: names[i] is the file behind settled[i].
 function collectSettled(names, settled) {
@@ -72,4 +65,4 @@ function formatReport(outcome) {
   return out.join('\n');
 }
 
-module.exports = { analyze, isTextFile, fileResult, errorEntry, finish, collect, collectSettled, totals, formatReport };
+module.exports = { analyze, isTextFile, fileResult, errorEntry, finish, collectSettled, totals, formatReport };

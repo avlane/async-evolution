@@ -1,22 +1,26 @@
 'use strict';
 
-// Map items through an async fn, running at most `limit` calls at a time.
-// Results keep the order of the input. Rejects on the first failure.
-function mapLimit(items, limit, fn) {
-  const results = new Array(items.length);
+// Like Promise.allSettled, but runs at most `limit` calls of fn at a time.
+// Outcomes keep the order of the input.
+function settleLimit(items, limit, fn) {
+  const outcomes = new Array(items.length);
   let next = 0;
 
   async function worker() {
     while (next < items.length) {
       const i = next++;
-      results[i] = await fn(items[i], i);
+      try {
+        outcomes[i] = { status: 'fulfilled', value: await fn(items[i], i) };
+      } catch (reason) {
+        outcomes[i] = { status: 'rejected', reason };
+      }
     }
   }
 
   const workers = [];
   const count = Math.min(limit, items.length);
   for (let w = 0; w < count; w++) workers.push(worker());
-  return Promise.all(workers).then(() => results);
+  return Promise.all(workers).then(() => outcomes);
 }
 
-module.exports = { mapLimit };
+module.exports = { settleLimit };
