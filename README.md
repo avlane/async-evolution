@@ -9,8 +9,14 @@ Needs Node 12 or newer, no dependencies.
 
     node bin/run.js samples
     node bin/run.js --impl callbacks samples
+    node bin/run.js --json --limit 4 samples
     npm test
     npm run bench
+
+Options for the runner: `--impl` picks the implementation, `--json` prints the
+raw result, `--limit`, `--stream` and `--timeout` are passed to the async
+version. The exit status is 0 on success, 2 if some files could not be read
+and 1 for usage errors or an unreadable directory.
 
 All three implementations resolve to the same `{ results, errors }` shape and
 `test/contract.test.js` runs one suite against each of them.
